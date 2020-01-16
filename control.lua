@@ -104,24 +104,18 @@ function parse_name(name)
     end
   end
 
-  local pos = (name:reverse()):find("[", 1, true)
+  local pos, ofc, number = name:find('%[(%d*)%]')
   if pos == nil then
     data.offset_number = nil
   else
-    pos = #name - pos + 1
-    local pos2 = name:find("]", pos, true)
-    if pos2 == nil then
-      data.offset_number = nil
-    else
-      data.number = tonumber(name:sub(pos + 1, pos2 - 1))
-      if data.number ~= nil then
-        data.number = math.floor(data.number)
-      end
-      name = name:sub(1,pos) .. name:sub(pos2)
-      data.offset_number = pos + 1
-      if data.offset_position ~= nil and data.offset_position > data.offset_number then
-        data.offset_position = data.offset_position - (pos2 - pos - 1)
-      end
+    data.number = tonumber(number)
+    if data.number ~= nil then
+      data.number = math.floor(data.number)
+    end
+    name = name:sub(1,pos) .. name:sub(ofc)
+    data.offset_number = pos + 1
+    if data.offset_position ~= nil and data.offset_position > data.offset_number then
+      data.offset_position = data.offset_position - (ofc - pos - 1)
     end
   end
 
