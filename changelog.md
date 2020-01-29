@@ -1,3 +1,7 @@
+Version 0.18.0
+=============
+- Update factorio version to 0.18.
+
 Version 0.0.3
 =============
 - Fix 0.17 rich text items in station names. Thanks to thinkong for the patch.
