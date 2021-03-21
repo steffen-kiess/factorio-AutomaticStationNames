@@ -204,8 +204,7 @@ function cleanup_train_station_name(entity)
   end
 end
 
-function on_new_entity(event)
-  local entity = event.created_entity
+function on_new_entity(entity)
   if not entity.valid then return end
   if not entity.supports_backer_name() then return end
   
@@ -223,7 +222,17 @@ function on_new_entity(event)
     cleanup_train_station_name(entity)
   end
 end
-script.on_event({defines.events.on_built_entity, defines.events.on_robot_built_entity}, on_new_entity)
+function on_new_entity_1(event)
+  local entity = event.created_entity
+  on_new_entity(entity)
+end
+function on_new_entity_2(event)
+  local entity = event.entity
+  on_new_entity(entity)
+end
+script.on_event({defines.events.on_built_entity, defines.events.on_robot_built_entity}, on_new_entity_1)
+-- script_raised_revive is emitted e.g. by the 'Nanobots' mod
+script.on_event({defines.events.script_raised_built, defines.events.script_raised_revive}, on_new_entity_2)
 
 -- Update global.all_station_names
 function on_entity_destroyed(event)
@@ -237,6 +246,7 @@ function on_entity_destroyed(event)
     
   remove_station_name(entity.force, entity.backer_name)
 end
+-- TODO: This is probably missing events (e.g. when an entity is destroyed by a script)
 script.on_event({defines.events.on_pre_player_mined_item, defines.events.on_robot_pre_mined, defines.events.on_entity_died}, on_entity_destroyed)
 
 -- Record changed station names in global.all_station_names and fix station name
